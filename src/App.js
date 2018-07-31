@@ -3,6 +3,7 @@ import './App.css';
 import axios from 'axios';
 import Movie from './components/movie';
 import Paginate from './components/paginate';
+import Search from './components/search';
 
 
 class App extends Component {
@@ -12,45 +13,47 @@ class App extends Component {
       isLoading:true,
       movies:[],
       activePage: 1,
+      searchTitle:'',
     }
   }
 
   componentDidMount() {
-    axios.get(`https://yts.am/api/v2/list_movies.json?page=${this.state.activePage}&limit=8`)
+    axios.get(`https://yts.am/api/v2/list_movies.json?limit=50`)
     .then(res => {
       const movies = res.data.data.movies;
+      movies.map(movie => movie.price = Math.floor((Math.random() * 20000) + 10000));
+
+      console.log(movies);
       this.setState({ movies, isLoading: false });
     })
   }
 
-  handlePaginationChange = (e, { activePage }) => {
-    this.setState({isLoading:true})
-    axios.get(`https://yts.am/api/v2/list_movies.json?page=${this.state.activePage}&limit=8`)
-    .then(res => {
-      const movies = res.data.data.movies;
-      console.log(movies);
-      this.setState({ movies, activePage, isLoading: false });
-    })
+  handleTitleChange = (event) => {
+    this.setState({searchTitle: event.target.value})
   }
 
 
   render() {
+    const filteredMovies=this.state.movies.filter(
+      (movie) => {
+        return movie.title_long.toLowerCase().indexOf(this.state.searchTitle) !== -1;
+      }
+    );
     return (
       <div className="App">
         <h1>Movie App</h1>
-        {this.state.isLoading ?
-          (<p>Cargando...</p>)
-          :
-          this.state.movies.map(movie=>(
-            <Movie key={movie.id} movie={movie}/>
-          ))
-        }
-
-      <Paginate
+        <Search value={this.state.searchTitle} handleChange={this.handleTitleChange}/>
+        <div className="movies">
+          {this.state.isLoading ?
+            (<p>Cargando...</p>)
+            :
+            filteredMovies.map(movie=> <Movie key={movie.id} movie={movie}/>)
+          }
+        </div>
+      {/* <Paginate
         page={this.state.activePage}
         onPageChange={this.handlePaginationChange}
-      />
-
+      /> */}
       </div>
     );
   }

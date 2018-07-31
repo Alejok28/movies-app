@@ -12,11 +12,13 @@ const Movie = ({movie}) => (
               <a href={movie.url} target="_blank">{movie.title_long}</a>
             </Item.Header>
             <Card.Meta>
-            
+
             </Card.Meta>
             <Item.Description>{movie.synopsis}</Item.Description>
             <Card.Content extra>
-              <Icon name='star' />Rating: {movie.rating}
+              Rating: {movie.rating}<Icon name='star' />
+              <br/>
+              Precio: ${movie.price} COP
             </Card.Content>
           </Item.Content>
         </Item>
