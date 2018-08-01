@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
-import Movie from './components/movie';
-import Paginate from './components/paginate';
-import Search from './components/search';
+import Movie from './components/Movie';
+// import Paginate from './components/Paginate';
+import Search from './components/Search';
+import ShoppingCart from './components/ShoppingCart';
 
 
 class App extends Component {
@@ -14,16 +15,15 @@ class App extends Component {
       movies:[],
       activePage: 1,
       searchTitle:'',
+      cart:[],
     }
   }
 
   componentDidMount() {
-    axios.get(`https://yts.am/api/v2/list_movies.json?limit=50`)
+    axios.get(`https://yts.am/api/v2/list_movies.json?limit=5`)
     .then(res => {
       const movies = res.data.data.movies;
-      movies.map(movie => movie.price = Math.floor((Math.random() * 20000) + 10000));
-
-      console.log(movies);
+      movies.map(movie => movie.price = Math.floor((Math.random() * 5) + 1));
       this.setState({ movies, isLoading: false });
     })
   }
@@ -32,6 +32,14 @@ class App extends Component {
     this.setState({searchTitle: event.target.value})
   }
 
+  handleAddToCart = (movie) => {
+    this.setState({...this.state,cart:this.state.cart.concat(movie)})
+  }
+  handleRemoveFromCart = (m) => {
+   //  this.setState({
+   //   cart: this.state.cart.filter((movie, i) => m.id !== movie.id)
+   // });
+  }
 
   render() {
     const filteredMovies=this.state.movies.filter(
@@ -42,12 +50,19 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Movie App</h1>
+        {this.state.cart.length > 0 ?
+          <ShoppingCart movies={this.state.cart}/>
+          :
+          null
+        }
+
         <Search value={this.state.searchTitle} handleChange={this.handleTitleChange}/>
+
         <div className="movies">
           {this.state.isLoading ?
-            (<p>Cargando...</p>)
+            (<p>Loading...</p>)
             :
-            filteredMovies.map(movie=> <Movie key={movie.id} movie={movie}/>)
+            filteredMovies.map(movie=> <Movie key={movie.id} movie={movie} onAddToCart={this.handleAddToCart.bind(this, movie)}/>)
           }
         </div>
       {/* <Paginate

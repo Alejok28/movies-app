@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, Item, Icon, Divider } from 'semantic-ui-react';
+import { Button, Card, Item, Icon, Divider } from 'semantic-ui-react';
 
-const Movie = ({movie}) => (
+const Movie = ({movie, onAddToCart}) => (
   <div className="movie-item">
 
       <Item.Group >
@@ -16,10 +16,10 @@ const Movie = ({movie}) => (
             </Card.Meta>
             <Item.Description>{movie.synopsis}</Item.Description>
             <Card.Content extra>
-              Rating: {movie.rating}<Icon name='star' />
-              <br/>
-              Precio: ${movie.price} COP
+              {movie.rating} <Icon name='star' />
             </Card.Content>
+            <Button onClick={onAddToCart} color='green'><Icon name='shop'/> ${movie.price}</Button>
+
           </Item.Content>
         </Item>
       </Item.Group>
