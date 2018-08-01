@@ -1,9 +1,9 @@
 import React from 'react';
 import { Pagination } from 'semantic-ui-react';
 
-const Paginate = ({onPageChange, activePage}) => (
+const Paginate = ({onPageChange, page}) => (
   <Pagination
-    activePage={activePage}
+    activePage={page}
     onPageChange={onPageChange}
     size='mini'
     totalPages={5}
