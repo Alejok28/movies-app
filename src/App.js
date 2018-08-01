@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
 import Movie from './components/Movie';
-// import Paginate from './components/Paginate';
+import Paginate from './components/Paginate';
 import Search from './components/Search';
 import ShoppingCart from './components/ShoppingCart';
 import { Grid, Button, Icon } from 'semantic-ui-react';
@@ -17,12 +17,12 @@ class App extends Component {
       searchTitle:'',
       searchGenre:'',
       ascending: true,
-      activePage: 1,
+      currentPage: 1,
     };
   }
 
   componentDidMount() {
-    axios.get(`https://yts.am/api/v2/list_movies.json?limit=10`)
+    axios.get(`https://yts.am/api/v2/list_movies.json?limit=40`)
     .then(res => {
       const movies = res.data.data.movies;
       movies.map(movie => movie.price = Math.floor((Math.random() * 5) + 1));
@@ -74,18 +74,41 @@ class App extends Component {
 
 
   handleAddToCart = (movie) => {
-    this.setState({...this.state,cart:this.state.cart.concat(movie)});
+    this.setState({cart:this.state.cart.concat(movie)});
   }
+
   handleRemoveFromCart = () => {
     this.setState({cart: []});
   }
 
+  previousPage = () => {
+    if (this.state.currentPage !== 1)
+      this.setState({
+        currentPage: this.state.currentPage - 1,
+        searchTitle: '',
+        searchGenre: '',
+      })
+  }
+
+  nextPage = () => {
+    if (this.state.currentPage + 1 < this.state.movies.length)
+      this.setState({
+        currentPage: this.state.currentPage + 1,
+        searchTitle: '',
+        searchGenre: '',
+      })
+  }
   render() {
-    const filterByTitle=this.state.movies.filter( movie => {
-      return movie.title_long.toLowerCase().indexOf(this.state.searchTitle) !== -1;
+    const {movies, currentPage, searchTitle} =this.state;
+
+    const filterByTitle = movies.slice(currentPage * 10, currentPage *10 + 10).filter( movie => {
+      return movie.title_long.toLowerCase().indexOf(searchTitle) !== -1;
     });
+
     const filteredMovies=filterByTitle.filter(movie => {
-      return movie.genres.join().toLowerCase().indexOf(this.state.searchGenre) !== -1;
+      if (movie.genres) {
+        return movie.genres.join().toLowerCase().indexOf(this.state.searchGenre) !== -1;
+      }
     });
 
     return (
@@ -115,9 +138,6 @@ class App extends Component {
               <div className="movies">
                 <h3>Ordernar por:</h3>
                 <Button  onClick={this.handleOrder.bind(this,"title_long")} color='blue'>Title <Icon name={this.state.ascending? "angle down" : "angle up"} /></Button>
-                {/* <Button basic={!this.state.ascending} onClick={this.handleAscendingOrder} color='blue'>asc</Button>
-                <Button basic={this.state.ascending} onClick={this.HandleDescendingOrder}  color='blue'>desc</Button> */}
-
                 {this.state.isLoading ?
                   (<p>Loading...</p>)
                   :
@@ -132,11 +152,7 @@ class App extends Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-
-      {/* <Paginate
-        page={this.state.activePage}
-        onPageChange={this.handlePaginationChange}
-      /> */}
+        <Paginate page={currentPage} next={this.nextPage} prev={this.previousPage} />
       </div>
     );
   }

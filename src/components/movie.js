@@ -11,7 +11,7 @@ const Movie = ({movie, onAddToCart}) => (
             <a href={movie.url} target="_blank">{movie.title_long}</a>
           </Item.Header>
           <Card.Meta>
-            Genres: {movie.genres.join()}.
+            Genres: {movie.genres ? (movie.genres.join()) : 0}.
           </Card.Meta>
           <Item.Description>{movie.synopsis}</Item.Description>
           <Card.Content>
