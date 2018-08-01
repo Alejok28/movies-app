@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Icon, Image, Button } from 'semantic-ui-react';
+import { Table, Icon, Image } from 'semantic-ui-react';
 
 const ShoppingCart = ({movies, onRemoveFromCart}) => {
   return (

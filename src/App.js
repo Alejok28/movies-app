@@ -5,7 +5,7 @@ import Movie from './components/Movie';
 // import Paginate from './components/Paginate';
 import Search from './components/Search';
 import ShoppingCart from './components/ShoppingCart';
-import { Grid } from 'semantic-ui-react';
+import { Grid, Button, Icon } from 'semantic-ui-react';
 
 class App extends Component {
   constructor(){
@@ -13,10 +13,11 @@ class App extends Component {
     this.state = {
       isLoading:true,
       movies:[],
-      activePage: 1,
+      cart:[],
       searchTitle:'',
       searchGenre:'',
-      cart:[],
+      ascending: true,
+      activePage: 1,
     };
   }
 
@@ -26,6 +27,7 @@ class App extends Component {
       const movies = res.data.data.movies;
       movies.map(movie => movie.price = Math.floor((Math.random() * 5) + 1));
       this.setState({ movies, isLoading: false });
+      this.handleAscendingOrder("title_long");
     })
   }
 
@@ -35,6 +37,41 @@ class App extends Component {
   handleGenreChange = (event) => {
     this.setState({searchGenre: event.target.value});
   }
+
+  handleOrder = (attr) => {
+    if (this.state.ascending) {
+      this.HandleDescendingOrder(attr);
+    } else {
+      this.handleAscendingOrder(attr);
+    }
+  }
+
+  HandleDescendingOrder = (attr) => {
+    var movies = this.state.movies;
+    movies.sort((a, b) => {
+      if(a[attr] > b[attr]) return -1;
+      if(a[attr] < b[attr]) return 1;
+      return 0;
+    });
+    this.setState({
+      movies,
+      ascending: false,
+    });
+  }
+
+  handleAscendingOrder = (attr) => {
+    var movies = this.state.movies;
+    movies.sort((a, b) => {
+      if(a[attr] < b[attr]) return -1;
+      if(a[attr] > b[attr]) return 1;
+      return 0;
+    });
+    this.setState({
+      movies,
+      ascending: true,
+    });
+  }
+
 
   handleAddToCart = (movie) => {
     this.setState({...this.state,cart:this.state.cart.concat(movie)});
@@ -76,6 +113,11 @@ class App extends Component {
             </Grid.Column>
             <Grid.Column width={12}>
               <div className="movies">
+                <h3>Ordernar por:</h3>
+                <Button  onClick={this.handleOrder.bind(this,"title_long")} color='blue'>Title <Icon name={this.state.ascending? "angle down" : "angle up"} /></Button>
+                {/* <Button basic={!this.state.ascending} onClick={this.handleAscendingOrder} color='blue'>asc</Button>
+                <Button basic={this.state.ascending} onClick={this.HandleDescendingOrder}  color='blue'>desc</Button> */}
+
                 {this.state.isLoading ?
                   (<p>Loading...</p>)
                   :
