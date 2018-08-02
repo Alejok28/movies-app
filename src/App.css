@@ -19,3 +19,18 @@
 input{
   width: 100%;
 }
+
+.movie-item{
+  background-color: white;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 10px;
+  border: 1px solid lightgray;
+}
+
+.pagination{
+ margin: 10px;
+}
+.title-sort{
+  margin-left: 10px !important;
+}

@@ -4,6 +4,7 @@ This application uses the [YTL's API](https://yts.am/api) to show a list of movi
 In the app you can:
 - sort the movies by title.
 - add a movie to shopping cart.
+- clear the shopping cart.
 - filter the movies by title or genre.
 
 This repo has been created with [Create React App](https://github.com/facebookincubator/create-react-app).

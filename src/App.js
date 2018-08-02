@@ -29,6 +29,7 @@ class App extends Component {
       this.setState({ movies, isLoading: false });
       this.handleAscendingOrder("title_long");
     })
+    .catch(error => alert(error))
   }
 
   handleTitleChange = (event) => {
@@ -47,7 +48,7 @@ class App extends Component {
   }
 
   HandleDescendingOrder = (attr) => {
-    var movies = this.state.movies;
+    const movies = this.state.movies;
     movies.sort((a, b) => {
       if(a[attr] > b[attr]) return -1;
       if(a[attr] < b[attr]) return 1;
@@ -60,7 +61,7 @@ class App extends Component {
   }
 
   handleAscendingOrder = (attr) => {
-    var movies = this.state.movies;
+    const movies = this.state.movies;
     movies.sort((a, b) => {
       if(a[attr] < b[attr]) return -1;
       if(a[attr] > b[attr]) return 1;
@@ -82,30 +83,32 @@ class App extends Component {
   }
 
   previousPage = () => {
-    if (this.state.currentPage !== 1)
+    if (this.state.currentPage !== 1) {
       this.setState({
         currentPage: this.state.currentPage - 1,
         searchTitle: '',
         searchGenre: '',
       })
+    }
   }
 
   nextPage = () => {
-    if (this.state.currentPage + 1 < this.state.movies.length)
+    if (this.state.currentPage + 1 < this.state.movies.length) {
       this.setState({
         currentPage: this.state.currentPage + 1,
         searchTitle: '',
         searchGenre: '',
       })
+    }
   }
   render() {
-    const {movies, currentPage, searchTitle} =this.state;
+    const {movies, currentPage, searchTitle} = this.state;
 
     const filterByTitle = movies.slice(currentPage * 10, currentPage *10 + 10).filter( movie => {
       return movie.title_long.toLowerCase().indexOf(searchTitle) !== -1;
     });
 
-    const filteredMovies=filterByTitle.filter(movie => {
+    const filteredMovies = filterByTitle.filter(movie => {
       if (movie.genres) {
         return movie.genres.join().toLowerCase().indexOf(this.state.searchGenre) !== -1;
       }
@@ -136,8 +139,7 @@ class App extends Component {
             </Grid.Column>
             <Grid.Column width={12}>
               <div className="movies">
-                <h3>Ordernar por:</h3>
-                <Button  onClick={this.handleOrder.bind(this,"title_long")} color='blue'>Title <Icon name={this.state.ascending? "angle down" : "angle up"} /></Button>
+                <Button  className="title-sort" onClick={this.handleOrder.bind(this,"title_long")} color='blue'>Sort by title <Icon name={this.state.ascending? "angle down" : "angle up"} /></Button>
                 {this.state.isLoading ?
                   (<p>Loading...</p>)
                   :

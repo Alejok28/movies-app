@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Item, Icon, Divider } from 'semantic-ui-react';
+import { Button, Card, Item, Icon } from 'semantic-ui-react';
 
 const Movie = ({movie, onAddToCart}) => (
   <div className="movie-item">
@@ -21,7 +21,6 @@ const Movie = ({movie, onAddToCart}) => (
         </Item.Content>
       </Item>
     </Item.Group>
-    <Divider />
   </div>
 )
 
